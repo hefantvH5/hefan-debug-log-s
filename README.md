@@ -23,6 +23,8 @@ import Log from "hefan-debug-log-s";
 
 //projectName  项目名称 env 环境
 
+//  ['development', 'testing', 'preproduction', 'production'] LOG中对应的环境字段，如不对应需要转化，否则无法输出
+
 Log.config(projectName, env)
 
 //例子
