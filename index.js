@@ -32,7 +32,7 @@ var Log = function () {
     function Log() {
         _classCallCheck(this, Log);
 
-        this.envArray = ['dev', 'test', 'preproduction', 'production'];
+        this.envArray = ['development', 'testing', 'preproduction', 'production'];
         this.envNameArray = ['开发环境', '测试环境', '预上线环境', '正式环境'];
         if (!created) {
             created = true;
