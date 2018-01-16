@@ -73,7 +73,7 @@ class Log {
         return msg;
     }
     _sendRequst(data) {
-        console.log(`响应主体:`);
+        console.log(`debug消息已发送`);
         const postData = querystring.stringify(data);
 
         const options = {
@@ -89,15 +89,15 @@ class Log {
         const req = http.request(options, (res) => {
             res.setEncoding('utf8');
             res.on('data', (chunk) => {
-                console.log(`响应主体: ${chunk}`);
+                // console.log(`响应主体: ${chunk}`);
             });
             res.on('end', () => {
-                console.log('响应中已无数据。');
+                //console.log('响应中已无数据。');
             });
         });
 
         req.on('error', (e) => {
-            console.error(`请求遇到问题: ${e.message}`);
+            //console.error(`请求遇到问题: ${e.message}`);
         });
 
         // 写入数据到请求主体

@@ -135,7 +135,7 @@ var Log = function () {
     }, {
         key: "_sendRequst",
         value: function _sendRequst(data) {
-            console.log("\u54CD\u5E94\u4E3B\u4F53:");
+            console.log("debug\u6D88\u606F\u5DF2\u53D1\u9001");
             var postData = _querystring2.default.stringify(data);
 
             var options = {
@@ -151,15 +151,15 @@ var Log = function () {
             var req = _http2.default.request(options, function (res) {
                 res.setEncoding('utf8');
                 res.on('data', function (chunk) {
-                    console.log("\u54CD\u5E94\u4E3B\u4F53: " + chunk);
+                    // console.log(`响应主体: ${chunk}`);
                 });
                 res.on('end', function () {
-                    console.log('响应中已无数据。');
+                    //console.log('响应中已无数据。');
                 });
             });
 
             req.on('error', function (e) {
-                console.error("\u8BF7\u6C42\u9047\u5230\u95EE\u9898: " + e.message);
+                //console.error(`请求遇到问题: ${e.message}`);
             });
 
             // 写入数据到请求主体
