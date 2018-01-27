@@ -32,7 +32,7 @@ var Log = function () {
     function Log() {
         _classCallCheck(this, Log);
 
-        this.envArray = ['development', 'testing', 'preproduction', 'production'];
+        this.envArray = ['development', 'testing', 'prepare', 'production'];
         this.envNameArray = ['开发环境', '测试环境', '预上线环境', '正式环境'];
         if (!created) {
             created = true;
@@ -50,8 +50,9 @@ var Log = function () {
             this.projectName = porjectName;
             this.envName = '';
             this.enable = false;
+            this.env = env || process.env.NODE.ENV;
             var index = this.envArray.indexOf(env);
-            if (index > -1 && env != 'production') {
+            if (index > -1) {
                 this.enable = true;
                 this.envName = this.envNameArray[index];
             }
@@ -63,7 +64,7 @@ var Log = function () {
                 msg[_key] = arguments[_key];
             }
 
-            this._consolePrint('debug', msg);
+            this._consolePrint('log', 0, msg);
         }
     }, {
         key: "log",
@@ -72,7 +73,7 @@ var Log = function () {
                 msg[_key2] = arguments[_key2];
             }
 
-            this._consolePrint('log', msg);
+            this._consolePrint('log', 1, msg);
         }
     }, {
         key: "info",
@@ -81,7 +82,7 @@ var Log = function () {
                 msg[_key3] = arguments[_key3];
             }
 
-            this._consolePrint('info', msg);
+            this._consolePrint('info', 2, msg);
         }
     }, {
         key: "warn",
@@ -90,7 +91,7 @@ var Log = function () {
                 msg[_key4] = arguments[_key4];
             }
 
-            this._consolePrint('warn', msg);
+            this._consolePrint('warn', 3, msg);
         }
     }, {
         key: "error",
@@ -99,16 +100,16 @@ var Log = function () {
                 msg[_key5] = arguments[_key5];
             }
 
-            this._consolePrint('error', msg);
+            this._consolePrint('error', 4, msg);
         }
     }, {
         key: "_consolePrint",
-        value: function _consolePrint(type, msg) {
+        value: function _consolePrint(type, level, msg) {
             var fn = console[type];
             if (fn) {
                 fn.apply(console, this._formatMsg(type, msg));
                 var imgData = this._paramFormat({ "projectName": this.projectName, "type": type, env: this.envName, "action": "4001", "pageName": this.projectName + "\u670D\u52A1\u7AEF", "logData": msg });
-                if (this.enable) {
+                if (this.enable && this.env == 'production' && level > 1) {
                     this._sendRequst(imgData);
                 }
             }
@@ -151,15 +152,15 @@ var Log = function () {
             var req = _http2.default.request(options, function (res) {
                 res.setEncoding('utf8');
                 res.on('data', function (chunk) {
-                    // console.log(`响应主体: ${chunk}`);
+                    // console.log(`响应主体: ${chunk}`)
                 });
                 res.on('end', function () {
-                    //console.log('响应中已无数据。');
+                    //console.log('响应中已无数据。')
                 });
             });
 
             req.on('error', function (e) {
-                //console.error(`请求遇到问题: ${e.message}`);
+                //console.error(`请求遇到问题: ${e.message}`)
             });
 
             // 写入数据到请求主体
