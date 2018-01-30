@@ -51,7 +51,7 @@ class Log {
         const fn = console[type]
         if (fn) {
             fn.apply(console, this._formatMsg(type, msg))
-            let imgData = this._paramFormat({ "projectName": this.projectName, "type": type, env: this.envName, "action": "4001", "pageName": `${this.projectName}服务端`, "logData": msg })
+            let imgData = this._paramFormat({ "projectName": this.projectName, "type": type, env: this.env, "action": "4001", "pageName": `${this.projectName}服务端`, "logData": msg })
             if(this.enable){
                 if(this.env == 'production'){
                     if(level > 0){
