@@ -108,7 +108,7 @@ var Log = function () {
             var fn = console[type];
             if (fn) {
                 fn.apply(console, this._formatMsg(type, msg));
-                var imgData = this._paramFormat({ "projectName": this.projectName, "type": type, env: this.envName, "action": "4001", "pageName": this.projectName + "\u670D\u52A1\u7AEF", "logData": msg });
+                var imgData = this._paramFormat({ "projectName": this.projectName, "type": type, env: this.env, "action": "4001", "pageName": this.projectName + "\u670D\u52A1\u7AEF", "logData": msg });
                 if (this.enable) {
                     if (this.env == 'production') {
                         if (level > 0) {
