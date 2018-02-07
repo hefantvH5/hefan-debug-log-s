@@ -4,27 +4,28 @@
 import http from 'http'
 import url from "url"
 import querystring from "querystring"
+import os from 'os'
+
 let created = false
 let instance = null
 class Log {
     constructor() {
         this.envArray = ['development', 'testing', 'prepare', 'production']
-        this.envNameArray = ['开发环境', '测试环境', '预上线环境', '正式环境']
+        
         if (!created) {
             created = true
             instance = new Log()
         }
         return instance
     }
-    config(porjectName = '项目名称未配置', env) {
-        this.projectName = porjectName
-        this.envName = ''
+
+    config(pjKey, env) {
+        this.pjKey = pjKey || '0'
         this.enable = false
         this.env = env || process.env.NODE.ENV
         let index = this.envArray.indexOf(env)
         if (index > -1) {
             this.enable = true
-            this.envName = this.envNameArray[index]
         }
     }
     debug(...msg) {
@@ -51,14 +52,23 @@ class Log {
         const fn = console[type]
         if (fn) {
             fn.apply(console, this._formatMsg(type, msg))
-            let imgData = this._paramFormat({ "projectName": this.projectName, "type": type, env: this.env, "action": "4001", "pageName": `${this.projectName}服务端`, "logData": msg })
+
+            let serverInfo = {hostname: os.hostname(), 
+                ip: os.networkInterfaces().address,
+                platform: os.platform(),
+                release: os.release(),
+                nodeVersion: process.version}
+
+            let data = this._paramFormat({ "pjKey": this.pjKey, "type": type, env: this.env, "action": "4001", 
+                "url": '', server: serverInfo, "logData": msg })
+
             if(this.enable){
                 if(this.env == 'production'){
                     if(level > 0){
-                        this._sendRequst(imgData)
+                        this._sendRequst(data)
                     }
                 }else{
-                    this._sendRequst(imgData)
+                    this._sendRequst(data)
                 }
             }          
         }

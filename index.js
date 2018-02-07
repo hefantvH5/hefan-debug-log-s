@@ -21,6 +21,10 @@ var _querystring = require("querystring");
 
 var _querystring2 = _interopRequireDefault(_querystring);
 
+var _os = require("os");
+
+var _os2 = _interopRequireDefault(_os);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -33,7 +37,7 @@ var Log = function () {
         _classCallCheck(this, Log);
 
         this.envArray = ['development', 'testing', 'prepare', 'production'];
-        this.envNameArray = ['开发环境', '测试环境', '预上线环境', '正式环境'];
+
         if (!created) {
             created = true;
             instance = new Log();
@@ -43,18 +47,13 @@ var Log = function () {
 
     _createClass(Log, [{
         key: "config",
-        value: function config() {
-            var porjectName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '项目名称未配置';
-            var env = arguments[1];
-
-            this.projectName = porjectName;
-            this.envName = '';
+        value: function config(pjKey, env) {
+            this.pjKey = pjKey || '0';
             this.enable = false;
             this.env = env || process.env.NODE.ENV;
             var index = this.envArray.indexOf(env);
             if (index > -1) {
                 this.enable = true;
-                this.envName = this.envNameArray[index];
             }
         }
     }, {
@@ -108,14 +107,23 @@ var Log = function () {
             var fn = console[type];
             if (fn) {
                 fn.apply(console, this._formatMsg(type, msg));
-                var imgData = this._paramFormat({ "projectName": this.projectName, "type": type, env: this.env, "action": "4001", "pageName": this.projectName + "\u670D\u52A1\u7AEF", "logData": msg });
+
+                var serverInfo = { hostname: _os2.default.hostname(),
+                    ip: _os2.default.networkInterfaces().address,
+                    platform: _os2.default.platform(),
+                    release: _os2.default.release(),
+                    nodeVersion: process.version };
+
+                var data = this._paramFormat({ "pjKey": this.pjKey, "type": type, env: this.env, "action": "4001",
+                    "url": '', server: serverInfo, "logData": msg });
+
                 if (this.enable) {
                     if (this.env == 'production') {
                         if (level > 0) {
-                            this._sendRequst(imgData);
+                            this._sendRequst(data);
                         }
                     } else {
-                        this._sendRequst(imgData);
+                        this._sendRequst(data);
                     }
                 }
             }
