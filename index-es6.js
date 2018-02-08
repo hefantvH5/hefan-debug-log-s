@@ -47,6 +47,13 @@ class Log {
     error(...msg) {
         this._consolePrint('error', 4, msg)
     }
+   
+    // msg struct
+    // path: req.path,
+    //             params: req.query || req.body,
+    //             message: err.message,
+    //             status: err.status,
+    //             stack: err.stack
 
     _consolePrint(type, level, msg) {
         const fn = console[type]
