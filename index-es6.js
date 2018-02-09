@@ -23,7 +23,7 @@ class Log {
         this.pjKey = pjKey || '0'
         this.enable = false
         this.env = env || process.env.NODE.ENV
-        let index = this.envArray.indexOf(env)
+        let index = this.envArray.indexOf(this.env)
         if (index > -1) {
             this.enable = true
         }
@@ -57,9 +57,7 @@ class Log {
 
     _consolePrint(type, level, msg) {
         const fn = console[type]
-        if (fn) {
-            fn.apply(console, this._formatMsg(type, msg))
-
+        if (fn) {          
             let serverInfo = {hostname: os.hostname(), 
                 ip: os.networkInterfaces().address,
                 platform: os.platform(),
@@ -77,7 +75,9 @@ class Log {
                 }else{
                     this._sendRequst(data)
                 }
-            }          
+            } 
+
+            fn.apply(console, this._formatMsg(type, msg))         
         }
 
     }
