@@ -51,7 +51,7 @@ var Log = function () {
             this.pjKey = pjKey || '0';
             this.enable = false;
             this.env = env || process.env.NODE.ENV;
-            var index = this.envArray.indexOf(env);
+            var index = this.envArray.indexOf(this.env);
             if (index > -1) {
                 this.enable = true;
             }
@@ -101,13 +101,19 @@ var Log = function () {
 
             this._consolePrint('error', 4, msg);
         }
+
+        // msg struct
+        // path: req.path,
+        //             params: req.query || req.body,
+        //             message: err.message,
+        //             status: err.status,
+        //             stack: err.stack
+
     }, {
         key: "_consolePrint",
         value: function _consolePrint(type, level, msg) {
             var fn = console[type];
             if (fn) {
-                fn.apply(console, this._formatMsg(type, msg));
-
                 var serverInfo = { hostname: _os2.default.hostname(),
                     ip: _os2.default.networkInterfaces().address,
                     platform: _os2.default.platform(),
@@ -126,6 +132,8 @@ var Log = function () {
                         this._sendRequst(data);
                     }
                 }
+
+                fn.apply(console, this._formatMsg(type, msg));
             }
         }
     }, {
